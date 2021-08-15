@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kfp-deploy
+  namespace: anonymous
+  labels:
+    app: kfp-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kfp-proxy
+  template:
+    metadata:
+      labels:
+        app: kfp-proxy
+      annotations:
+        sidecar.istio.io/inject: 'true'
+    spec:
+      serviceAccountName: sleep
+      containers:
+        - name: kfp-proxy-con
+          image: brightfly/kfp-proxy:1.0.0
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 6996
+            name: proxy
+          env:
+            - name: KF_PIPELINES_ENDPOINT
+              value: "ml-pipeline.kubeflow.svc.cluster.local:8888"
+
+

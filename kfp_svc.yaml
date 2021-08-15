@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kfp-proxy
+  namespace: anonymous
+spec:
+  ports:
+    - name: prox
+      port: 23000
+      protocol: TCP
+      targetPort: 6996
+  selector:
+    app: kfp-proxy
+  sessionAffinity: None
+  type: ClusterIP
